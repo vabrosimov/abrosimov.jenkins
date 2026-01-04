@@ -1,19 +1,25 @@
 plugins {
-    id 'java-library'
+    id 'groovy'
     id 'maven-publish'
 }
 
 group = 'ru.abrosimov'
 version = '1.0.0'
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
-}
-
 repositories {
     mavenCentral()
+}
+
+dependencies {
+    implementation 'org.codehaus.groovy:groovy-all:3.0.21'
+}
+
+sourceSets {
+    main {
+        groovy {
+            srcDirs = ['src']
+        }
+    }
 }
 
 publishing {
@@ -21,7 +27,7 @@ publishing {
         mavenJava(MavenPublication) {
             from components.java
 
-            artifactId = 'jenkins'
+            artifactId = 'jenkins-shared-lib'
         }
     }
 
