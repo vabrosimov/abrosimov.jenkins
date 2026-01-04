@@ -1,4 +1,4 @@
-package ru.abrosimov.jenkins.utils
+package utils
 
 import ru.abrosimov.jenkins.core.Jenkins
 

@@ -1,4 +1,4 @@
-package ru.abrosimov.jenkins.context
+package context
 
 class PipelineContext {
     List<Application> applications = []

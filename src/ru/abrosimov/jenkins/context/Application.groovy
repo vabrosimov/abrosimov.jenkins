@@ -1,4 +1,4 @@
-package ru.abrosimov.jenkins.context
+package context
 
 interface Application {
     String digest
