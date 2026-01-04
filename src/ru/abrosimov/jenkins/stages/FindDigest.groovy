@@ -35,7 +35,7 @@ class FindDigest extends Jenkins {
                 }
 
                 jenkins.echo "Found digest in registry: ${digest}"
-                application.digest = digest
+                application.setDigest(digest)
             }
         }
     }
