@@ -1,11 +1,11 @@
-package utils
+package ru.abrosimov.jenkins.utils
 
-import core.Jenkins
+import ru.abrosimov.jenkins.core.Jenkins
 
 class Logger extends Jenkins {
 
-    public Logger(Object jenkins) {
-        super(jenkins);
+    Logger(Object jenkins) {
+        super(jenkins)
     }
 
     def logStartStage() {
