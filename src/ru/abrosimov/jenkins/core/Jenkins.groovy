@@ -1,4 +1,4 @@
-package core
+package ru.abrosimov.jenkins.core
 
 class Jenkins {
 
