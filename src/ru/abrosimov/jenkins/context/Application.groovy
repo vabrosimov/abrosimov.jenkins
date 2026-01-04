@@ -5,6 +5,8 @@ interface Application {
     final String mavenArtifact
     final String image
     final String versionParamName
+    final String vmAddress
+    final String vmUser
     String digest
     String version
 }
