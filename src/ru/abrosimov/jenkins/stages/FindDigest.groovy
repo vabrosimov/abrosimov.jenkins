@@ -10,7 +10,13 @@ class FindDigest extends Jenkins {
     }
 
     void call(Application application) {
-        def manifestsUrl = "${jenkins.REGISTRY}/${application.image}/manifests/${jenkins.params[application.versionParamName]}"
+        String version = jenkins.params[application.versionParamName]
+
+        if (version == "SKIP_INSTALL") {
+            return
+        }
+
+        GString manifestsUrl = "${jenkins.REGISTRY}/${application.image}/manifests/${version}"
 
         jenkins.withCredentials([
                 jenkins.usernamePassword(

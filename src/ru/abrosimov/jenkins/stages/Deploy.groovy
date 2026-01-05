@@ -10,6 +10,12 @@ class Deploy extends Jenkins {
     }
 
     void call(Application application) {
+        String version = jenkins.params[application.versionParamName]
+
+        if (version == "SKIP_INSTALL") {
+            return
+        }
+
         jenkins.sshagent(['SSH_KEY_VM']) {
             jenkins.sh """
                 mkdir -p -m 700 ~/.ssh
