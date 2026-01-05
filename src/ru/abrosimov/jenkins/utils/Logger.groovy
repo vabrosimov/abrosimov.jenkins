@@ -1,14 +1,8 @@
 package ru.abrosimov.jenkins.utils
 
-import ru.abrosimov.jenkins.core.Jenkins
+class Logger {
 
-class Logger extends Jenkins {
-
-    Logger(Object jenkins) {
-        super(jenkins)
-    }
-
-    def logStartStage() {
+    static void startStage(Object jenkins) {
         jenkins.ansiColor('xterm') {
             jenkins.echo """
         \u001B[34m══════════════════════════════════════════════\u001B[0m
@@ -18,7 +12,7 @@ class Logger extends Jenkins {
         }
     }
 
-    def logEndStage() {
+    static void endStage(Object jenkins) {
         jenkins.ansiColor('xterm') {
             jenkins.echo """
         \u001B[32m✔✔✔ END STAGE: ${jenkins.STAGE_NAME}\u001B[0m
