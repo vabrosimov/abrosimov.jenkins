@@ -1,4 +1,4 @@
-package ru.abrosimov.jenkins.context
+package ru.abrosimov.jenkins.cd.context
 
 interface Application {
     String getMavenGroup()

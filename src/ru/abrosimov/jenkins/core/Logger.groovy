@@ -1,4 +1,4 @@
-package ru.abrosimov.jenkins.utils
+package ru.abrosimov.jenkins.core
 
 class Logger {
 

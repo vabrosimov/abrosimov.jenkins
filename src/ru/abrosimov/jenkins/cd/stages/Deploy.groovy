@@ -1,6 +1,6 @@
-package ru.abrosimov.jenkins.stages
+package ru.abrosimov.jenkins.cd.stages
 
-import ru.abrosimov.jenkins.context.Application
+import ru.abrosimov.jenkins.cd.context.Application
 import ru.abrosimov.jenkins.core.Jenkins
 
 class Deploy extends Jenkins {

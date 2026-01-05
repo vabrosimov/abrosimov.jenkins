@@ -1,4 +1,4 @@
-package ru.abrosimov.jenkins.context
+package ru.abrosimov.jenkins.cd.context
 
 import ru.abrosimov.jenkins.core.Jenkins
 
