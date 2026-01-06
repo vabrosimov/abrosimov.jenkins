@@ -34,12 +34,8 @@ class Deploy extends Jenkins {
             ssh ${application.vmUser}@${application.vmAddress} "
                 sudo mkdir -p /home/${application.vmUser}/.docker
                 
-                # Docker auth config
-                echo '{\"auths\":{\"${"95.174.94.249:8082/repository/registry"}\":{\"auth\":\"' | \\
-                tr -d '\\n' | \\
-                base64 -w0 <<< '$NEXUS_USER:$NEXUS_PASSWORD' | \\
-                tr -d '\\n' | \\
-                cat > /home/${application.vmUser}/.docker/config.json
+                echo '\$NEXUS_PASSWORD' | sudo docker login 95.174.94.249:8082/repository/registry \\
+                    -u \$NEXUS_USER --password-stdin
                 
                 sudo chown ${application.vmUser}:${application.vmUser} /home/${application.vmUser}/.docker/config.json
             "
