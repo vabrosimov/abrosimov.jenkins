@@ -2,6 +2,7 @@ package ru.abrosimov.jenkins.cd.stages
 
 import ru.abrosimov.jenkins.cd.context.Application
 import ru.abrosimov.jenkins.core.Jenkins
+import ru.abrosimov.jenkins.core.TemplateProcessor
 
 class Deploy extends Jenkins {
 
@@ -16,6 +17,13 @@ class Deploy extends Jenkins {
             return
         }
 
+        TemplateProcessor.process(
+                jenkins,
+                "src/apps/${application.mavenArtifact}/docker-compose.yml",
+                ["digest": application.digest],
+                "docker-compose.yml.processed"
+        )
+
         jenkins.sshagent(['SSH_KEY_VM']) {
             jenkins.sh """
                 mkdir -p -m 700 ~/.ssh
@@ -25,7 +33,7 @@ class Deploy extends Jenkins {
                 ssh -o StrictHostKeyChecking=no ${application.vmUser}@${application.vmAddress} \\
                 "sudo mkdir -p -m 755 /opt/${application.mavenArtifact} && sudo chown ${application.vmUser}:${application.vmUser} /opt/${application.mavenArtifact} && sudo chmod 755 /opt/${application.mavenArtifact}"
                 
-                scp src/apps/${application.mavenArtifact}/docker-compose.yml ${application.vmUser}@${application.vmAddress}:/opt/${application.mavenArtifact}/docker-compose.yml
+                scp docker-compose.yml.processed ${application.vmUser}@${application.vmAddress}:/opt/${application.mavenArtifact}/docker-compose.yml
                 
                 ssh -o StrictHostKeyChecking=no ${application.vmUser}@${application.vmAddress} \\
                 "cd /opt/${application.mavenArtifact} && sudo docker compose up -d --force-recreate"
