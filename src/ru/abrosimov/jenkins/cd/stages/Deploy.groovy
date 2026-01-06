@@ -24,6 +24,29 @@ class Deploy extends Jenkins {
                 "docker-compose.yml.processed"
         )
 
+        jenkins.withCredentials([
+                jenkins.usernamePassword(credentialsId: "NEXUS_CREDENTIALS",
+                        usernameVariable: 'NEXUS_USER',
+                        passwordVariable: 'NEXUS_PASSWORD')
+        ]) {
+            jenkins.sshagent(['SSH_KEY_VM']) {
+                jenkins.sh """
+            ssh ${application.vmUser}@${application.vmAddress} "
+                sudo mkdir -p /home/${application.vmUser}/.docker
+                
+                # Docker auth config
+                echo '{\"auths\":{\"${"95.174.94.249:8082/repository/registry"}\":{\"auth\":\"' | \\
+                tr -d '\\n' | \\
+                base64 -w0 <<< '$NEXUS_USER:$NEXUS_PASSWORD' | \\
+                tr -d '\\n' | \\
+                cat > /home/${application.vmUser}/.docker/config.json
+                
+                sudo chown ${application.vmUser}:${application.vmUser} /home/${application.vmUser}/.docker/config.json
+            "
+        """
+            }
+        }
+
         jenkins.sshagent(['SSH_KEY_VM']) {
             jenkins.sh """
                 mkdir -p -m 700 ~/.ssh
