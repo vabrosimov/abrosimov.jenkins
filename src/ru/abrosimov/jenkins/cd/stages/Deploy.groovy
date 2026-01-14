@@ -1,6 +1,7 @@
 package ru.abrosimov.jenkins.cd.stages
 
 import ru.abrosimov.jenkins.cd.context.Application
+import ru.abrosimov.jenkins.cd.context.PipelineContext
 import ru.abrosimov.jenkins.core.Jenkins
 import ru.abrosimov.jenkins.core.TemplateProcessor
 
@@ -10,7 +11,7 @@ class Deploy extends Jenkins {
         super(jenkins)
     }
 
-    void call(Application application) {
+    void call(PipelineContext pipelineContext, Application application) {
         String version = jenkins.params[application.versionParamName]
 
         if (version == "SKIP_INSTALL") {
@@ -20,7 +21,7 @@ class Deploy extends Jenkins {
         TemplateProcessor.process(
                 jenkins,
                 "src/apps/${application.mavenArtifact}/docker-compose.yml",
-                ["digest": application.digest],
+                pipelineContext.getModel(application),
                 "docker-compose.yml.processed"
         )
 
@@ -31,15 +32,14 @@ class Deploy extends Jenkins {
         ]) {
             jenkins.sshagent(['SSH_KEY_VM']) {
                 jenkins.sh """
-            ssh ${application.vmUser}@${application.vmAddress} "
-                sudo mkdir -p /home/${application.vmUser}/.docker
-                
-                echo '\$NEXUS_PASSWORD' | sudo docker login 95.174.94.249:8082/repository/registry \\
-                    -u \$NEXUS_USER --password-stdin
-                
-                sudo chown ${application.vmUser}:${application.vmUser} /home/${application.vmUser}/.docker/config.json
-            "
-        """
+                    ssh ${application.vmUser}@${application.vmAddress} "
+                        sudo mkdir -p /home/${application.vmUser}/.docker
+                        
+                        echo "$NEXUS_PASSWORD" | docker login "95.174.94.249:8082/repository/registry" \
+                        -u "$NEXUS_USER" \
+                        --password-stdin
+                    "
+                """
             }
         }
 

@@ -2,12 +2,7 @@ package ru.abrosimov.jenkins.core
 
 class TemplateProcessor {
 
-    static String process(
-            Object jenkins,
-            String templatePath,
-            Map<String, Object> model,
-            String outputPath
-    ) {
+    static String process(Object jenkins, String templatePath, Map<String, Object> model, String outputPath) {
         String text = jenkins.readFile(templatePath)
 
         model.each { k, v ->
