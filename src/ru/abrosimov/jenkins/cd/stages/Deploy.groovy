@@ -30,16 +30,22 @@ class Deploy extends Jenkins {
                         usernameVariable: 'NEXUS_USER',
                         passwordVariable: 'NEXUS_PASSWORD')
         ]) {
-            jenkins.sshagent(['SSH_KEY_VM']) {
-                jenkins.sh """
-                    ssh ${application.vmUser}@${application.vmAddress} "
-                        sudo mkdir -p /home/${application.vmUser}/.docker
+            jenkins.withEnv([
+                    "VM_USER=${application.vmUser}",
+                    "VM_ADDRESS=${application.vmAddress}",
+                    "REGISTRY=${pipelineContext.registry}"
+            ]) {
+                jenkins.sshagent(['SSH_KEY_VM']) {
+                    jenkins.sh '''
+                    ssh $VM_USER@$VM_ADDRESS "
+                        sudo mkdir -p /home/$VM_USER/.docker
                         
-                        echo "$NEXUS_PASSWORD" | docker login "95.174.94.249:8082/repository/registry" \
-                        -u "$NEXUS_USER" \
+                        echo $NEXUS_PASSWORD | docker login "$REGISTRY" \
+                        -u $NEXUS_USER \
                         --password-stdin
                     "
-                """
+                '''
+                }
             }
         }
 
