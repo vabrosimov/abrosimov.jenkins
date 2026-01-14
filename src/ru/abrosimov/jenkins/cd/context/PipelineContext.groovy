@@ -15,12 +15,16 @@ abstract class PipelineContext extends Jenkins {
         this.applications = applications
     }
 
-    private Map<Application, Map> modelByApplication
+    protected Map<Application, Map> modelByApplication = [:]
     Map getModel(Application application) {
+        if (modelByApplication.isEmpty()) {
+            initModelByApplication()
+        }
+
         return modelByApplication.get(application)
     }
 
-    void initModelByApplication() {
+    protected void initModelByApplication() {
         applications.each { Application application ->
             Map model = [
                     "mavenGroup": application.mavenGroup,
