@@ -26,7 +26,7 @@ class PushToRegistry extends Jenkins {
                     "REGISTRY=${pipelineContext.registry}"
             ]) {
                 jenkins.sh '''
-                               echo "$NEXUS_PASSWORD" | sudo docker login "$REGISTRY" \
+                               echo "$NEXUS_PASSWORD" | docker login "$REGISTRY" \
                                 -u "$NEXUS_USER" \
                                 --password-stdin
 
