@@ -37,14 +37,12 @@ class Deploy extends Jenkins {
             ]) {
                 jenkins.sshagent(['SSH_KEY_VM']) {
                     jenkins.sh '''
-                    ssh $VM_USER@$VM_ADDRESS "
-                        sudo mkdir -p /home/$VM_USER/.docker
-                        
-                        echo $NEXUS_PASSWORD | docker login "$REGISTRY" \
-                        -u $NEXUS_USER \
-                        --password-stdin
-                    "
-                '''
+                        ssh $VM_USER@$VM_ADDRESS "
+                            echo $NEXUS_PASSWORD | sudo docker login "$REGISTRY" \
+                            -u $NEXUS_USER \
+                            --password-stdin
+                        "
+                    '''
                 }
             }
         }
