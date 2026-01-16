@@ -1,23 +1,18 @@
 package ru.abrosimov.jenkins.ci.stages
 
+import ru.abrosimov.jenkins.ci.context.PipelineContext
 import ru.abrosimov.jenkins.core.Jenkins
 
-class GetAndIncrementVersion extends Jenkins {
+class IncrementVersion extends Jenkins {
 
-    GetAndIncrementVersion(Object jenkins) {
+    IncrementVersion(Object jenkins) {
         super(jenkins)
     }
 
-    String call() {
+    void call(PipelineContext pipelineContext) {
         String versionFile = "version.properties"
 
-        String currentVersion = jenkins.sh(
-                script: "grep '^version=' ${versionFile} | cut -d'=' -f2",
-                returnStdout: true
-        ).trim()
-        jenkins.echo "Current version: ${currentVersion}"
-
-        List<String> parts = currentVersion.tokenize('-')
+        List<String> parts = pipelineContext.application.version.tokenize('-')
         GString nextVersion = "${parts[0]}-${parts[1].toInteger() + 1}"
 
         jenkins.writeFile(
@@ -40,7 +35,5 @@ class GetAndIncrementVersion extends Jenkins {
                            git push origin master
                        """
         }
-
-        return currentVersion
     }
 }
