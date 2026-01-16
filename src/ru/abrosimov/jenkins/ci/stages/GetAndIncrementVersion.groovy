@@ -27,18 +27,18 @@ class GetAndIncrementVersion extends Jenkins {
 
         jenkins.echo "Next version set to: ${nextVersion}"
 
-        jenkins.sshagent(credentials: ["SSH_KEY_GITHUB"]) {
+        jenkins.sshagent(["SSH_KEY_GITHUB"]) {
             jenkins.sh """
-                        mkdir -p -m 700 ~/.ssh
-                        ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-                        chmod 600 ~/.ssh/known_hosts
-
-                        git config user.name "Jenkins CI"
-                        git config user.email "ci@jenkins.local"
-                        git add ${versionFile}
-                        git commit -m "chore: bump version to ${nextVersion}"
-                        git push origin master
-                        """
+                           mkdir -p -m 700 ~/.ssh
+                           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+                           chmod 600 ~/.ssh/known_hosts
+                            
+                           git config user.name "Jenkins CI"
+                           git config user.email "ci@jenkins.local"
+                           git add ${versionFile}
+                           git commit -m "chore: bump version to ${nextVersion}"
+                           git push origin master
+                       """
         }
 
         return currentVersion

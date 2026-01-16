@@ -10,7 +10,7 @@ class Checkout extends Jenkins {
     }
 
     void call(PipelineContext pipelineContext) {
-        jenkins.sshagent(credentials: ["SSH_KEY_GITHUB"]) {
+        jenkins.sshagent(["SSH_KEY_GITHUB"]) {
             jenkins.git(
                     url: "${pipelineContext.application.git}",
                     branch: "${pipelineContext.application.gitBranch}",
