@@ -8,6 +8,12 @@ abstract class PipelineContext extends Jenkins {
         super(jenkins)
     }
 
+    void appendBuildDescription(String line) {
+        String description = jenkins.currentBuild.description ?: ""
+        description += line.endsWith("\n") ? line : line + "\n"
+        jenkins.currentBuild.description = description
+    }
+
     abstract String getRegistry();
 
     abstract List<Application> getApplications();
